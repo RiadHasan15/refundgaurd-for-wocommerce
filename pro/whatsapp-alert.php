@@ -17,3 +17,14 @@ add_action( 'woocommerce_thankyou', function( $order_id ) {
         ] );
     }
 } );
+
+function refundguard_render_alerts_page_pro() {
+    echo '<div class="wrap"><h1>' . __( 'Alerts', 'refundguard-for-woocommerce' ) . '</h1>';
+    echo '<p>' . __( 'High-risk order alerts are sent to the admin email and via WhatsApp (if configured) when a high-risk order is detected.', 'refundguard-for-woocommerce' ) . '</p>';
+    echo '<ul>';
+    echo '<li>' . __( 'Email alerts: Sent to the site admin email.', 'refundguard-for-woocommerce' ) . '</li>';
+    echo '<li>' . __( 'WhatsApp alerts: Integrate with your WhatsApp provider using the refundguard_send_whatsapp action.', 'refundguard-for-woocommerce' ) . '</li>';
+    echo '</ul>';
+    echo '<p><em>' . __( 'To customize WhatsApp integration, hook into refundguard_send_whatsapp.', 'refundguard-for-woocommerce' ) . '</em></p>';
+    echo '</div>';
+}
