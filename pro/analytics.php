@@ -13,6 +13,11 @@ add_action( 'admin_menu', function() {
 } );
 
 function refundguard_render_analytics_page() {
+    $license = get_option('refundguard_pro_license', '');
+    if (empty($license)) {
+        echo '<div class="wrap"><h1>RefundGuard Pro</h1><p>' . __( 'This feature is available in RefundGuard Pro. Please enter your license key in the License tab to unlock Pro features.', 'refundguard-for-woocommerce' ) . '</p></div>';
+        return;
+    }
     ?>
     <div class="wrap">
         <h1><?php _e( 'RefundGuard Analytics', 'refundguard-for-woocommerce' ); ?></h1>

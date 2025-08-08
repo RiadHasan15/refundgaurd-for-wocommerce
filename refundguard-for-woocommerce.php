@@ -39,16 +39,9 @@ require_once REFUNDGUARD_PLUGIN_DIR . 'admin/dashboard.php';
 require_once REFUNDGUARD_PLUGIN_DIR . 'admin/settings-page.php';
 require_once REFUNDGUARD_PLUGIN_DIR . 'admin/license-page.php';
 
-// Load Pro features if present and license is set
-$refundguard_license = get_option('refundguard_pro_license', '');
+// Load Pro features if present
 if ( file_exists( REFUNDGUARD_PRO_PATH ) ) {
-    if ( !empty($refundguard_license) ) {
-        require_once REFUNDGUARD_PRO_PATH;
-    } else {
-        add_action('admin_notices', function() {
-            echo '<div class="notice notice-warning"><p>' . __( 'RefundGuard Pro is installed but not activated. Please enter your license key in RefundGuard > License.', 'refundguard-for-woocommerce' ) . '</p></div>';
-        });
-    }
+    require_once REFUNDGUARD_PRO_PATH;
 }
 
 // Admin Menu Registration (top-level RefundGuard menu)
@@ -71,28 +64,14 @@ function refundguard_admin_menu() {
         'refundguard',
         'refundguard_render_settings_page'
     );
-    $license = get_option('refundguard_pro_license', '');
-    if ( file_exists( REFUNDGUARD_PRO_PATH ) && !empty($license) ) {
-        add_submenu_page(
-            'refundguard',
-            __( 'Analytics', 'refundguard-for-woocommerce' ),
-            __( 'Analytics', 'refundguard-for-woocommerce' ),
-            'manage_woocommerce',
-            'refundguard-analytics',
-            'refundguard_render_analytics_page'
-        );
-        // Add more Pro submenus here as needed
-    } else {
-        add_submenu_page(
-            'refundguard',
-            __( 'Analytics', 'refundguard-for-woocommerce' ),
-            __( 'Analytics', 'refundguard-for-woocommerce' ),
-            'manage_woocommerce',
-            'refundguard-analytics',
-            'refundguard_render_pro_upsell_page'
-        );
-        // Add more Pro submenus as upsell if needed
-    }
+    add_submenu_page(
+        'refundguard',
+        __( 'Analytics', 'refundguard-for-woocommerce' ),
+        __( 'Analytics', 'refundguard-for-woocommerce' ),
+        'manage_woocommerce',
+        'refundguard-analytics',
+        'refundguard_render_analytics_page'
+    );
     add_submenu_page(
         'refundguard',
         __( 'License', 'refundguard-for-woocommerce' ),
