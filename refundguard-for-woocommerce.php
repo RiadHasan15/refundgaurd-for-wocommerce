@@ -39,9 +39,16 @@ require_once REFUNDGUARD_PLUGIN_DIR . 'admin/dashboard.php';
 require_once REFUNDGUARD_PLUGIN_DIR . 'admin/settings-page.php';
 require_once REFUNDGUARD_PLUGIN_DIR . 'admin/license-page.php';
 
-// Load Pro features if present
+// Load Pro features if present and license is set
+$refundguard_license = get_option('refundguard_pro_license', '');
 if ( file_exists( REFUNDGUARD_PRO_PATH ) ) {
-    require_once REFUNDGUARD_PRO_PATH;
+    if ( !empty($refundguard_license) ) {
+        require_once REFUNDGUARD_PRO_PATH;
+    } else {
+        add_action('admin_notices', function() {
+            echo '<div class="notice notice-warning"><p>' . __( 'RefundGuard Pro is installed but not activated. Please enter your license key in RefundGuard > License.', 'refundguard-for-woocommerce' ) . '</p></div>';
+        });
+    }
 }
 
 // Admin Menu Registration (top-level RefundGuard menu)
