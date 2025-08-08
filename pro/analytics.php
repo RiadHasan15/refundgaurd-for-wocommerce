@@ -1,4 +1,5 @@
 <?php
+error_log('RefundGuard: analytics.php loaded');
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 add_action( 'admin_menu', function() {
