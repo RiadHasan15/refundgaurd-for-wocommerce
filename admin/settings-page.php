@@ -21,6 +21,10 @@ function refundguard_render_settings_page() {
             update_option( 'refundguard_pro_ai_enabled', !empty($_POST['pro_ai_enabled']) ? '1' : '0' );
             update_option( 'refundguard_pro_auto_flag', !empty($_POST['pro_auto_flag']) ? '1' : '0' );
             update_option( 'refundguard_pro_email_alerts', !empty($_POST['pro_email_alerts']) ? '1' : '0' );
+            update_option( 'refundguard_twilio_sid', sanitize_text_field( $_POST['twilio_sid'] ?? '' ) );
+            update_option( 'refundguard_twilio_token', sanitize_text_field( $_POST['twilio_token'] ?? '' ) );
+            update_option( 'refundguard_twilio_from', sanitize_text_field( $_POST['twilio_from'] ?? '' ) );
+            update_option( 'refundguard_twilio_to', sanitize_text_field( $_POST['twilio_to'] ?? '' ) );
         }
         echo '<div class="updated"><p>' . __( 'Settings saved.', 'refundguard-for-woocommerce' ) . '</p></div>';
     }
@@ -54,6 +58,10 @@ function refundguard_render_settings_page() {
                     $ai_enabled = get_option('refundguard_pro_ai_enabled', '1');
                     $auto_flag = get_option('refundguard_pro_auto_flag', '1');
                     $email_alerts = get_option('refundguard_pro_email_alerts', '1');
+                    $twilio_sid = get_option('refundguard_twilio_sid', '');
+                    $twilio_token = get_option('refundguard_twilio_token', '');
+                    $twilio_from = get_option('refundguard_twilio_from', '');
+                    $twilio_to = get_option('refundguard_twilio_to', '');
                     ?>
                     <tr><th colspan="2"><hr><strong><?php _e('Pro Features', 'refundguard-for-woocommerce'); ?></strong></th></tr>
                     <tr>
@@ -75,6 +83,23 @@ function refundguard_render_settings_page() {
                     <tr>
                         <th><?php _e('WhatsApp Alerts', 'refundguard-for-woocommerce'); ?></th>
                         <td><em><?php _e('Integrate with your WhatsApp provider using the refundguard_send_whatsapp action. See Alerts tab for more info.', 'refundguard-for-woocommerce'); ?></em></td>
+                    </tr>
+                    <tr><th colspan="2"><hr><strong><?php _e('WhatsApp Integration (Twilio)', 'refundguard-for-woocommerce'); ?></strong></th></tr>
+                    <tr>
+                        <th><?php _e('Twilio Account SID', 'refundguard-for-woocommerce'); ?></th>
+                        <td><input type="text" name="twilio_sid" value="<?php echo esc_attr($twilio_sid); ?>" size="40" /></td>
+                    </tr>
+                    <tr>
+                        <th><?php _e('Twilio Auth Token', 'refundguard-for-woocommerce'); ?></th>
+                        <td><input type="text" name="twilio_token" value="<?php echo esc_attr($twilio_token); ?>" size="40" /></td>
+                    </tr>
+                    <tr>
+                        <th><?php _e('Twilio WhatsApp From Number', 'refundguard-for-woocommerce'); ?></th>
+                        <td><input type="text" name="twilio_from" value="<?php echo esc_attr($twilio_from); ?>" size="40" placeholder="whatsapp:+14155238886" /></td>
+                    </tr>
+                    <tr>
+                        <th><?php _e('Admin WhatsApp To Number', 'refundguard-for-woocommerce'); ?></th>
+                        <td><input type="text" name="twilio_to" value="<?php echo esc_attr($twilio_to); ?>" size="40" placeholder="whatsapp:+1234567890" /></td>
                     </tr>
                 <?php } ?>
             </table>

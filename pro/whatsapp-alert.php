@@ -10,7 +10,15 @@ add_action( 'woocommerce_thankyou', function( $order_id ) {
         $subject = __( 'High-Risk Order Alert', 'refundguard-for-woocommerce' );
         $message = sprintf( __( 'Order #%d has been flagged as HIGH RISK.\nReason: %s', 'refundguard-for-woocommerce' ), $order_id, $risk['reason'] );
         wp_mail( $admin_email, $subject, $message );
-        // WhatsApp alert (stub)
+        // WhatsApp alert (Twilio)
+        $sid = get_option('refundguard_twilio_sid', '');
+        $token = get_option('refundguard_twilio_token', '');
+        $from = get_option('refundguard_twilio_from', '');
+        $to = get_option('refundguard_twilio_to', '');
+        if ($sid && $token && $from && $to) {
+            refundguard_send_whatsapp_twilio($sid, $token, $from, $to, $message);
+        }
+        // Custom WhatsApp hook for other providers
         do_action( 'refundguard_send_whatsapp', [
             'order_id' => $order_id,
             'message' => $message,
@@ -18,14 +26,31 @@ add_action( 'woocommerce_thankyou', function( $order_id ) {
     }
 } );
 
+function refundguard_send_whatsapp_twilio($sid, $token, $from, $to, $message) {
+    $url = 'https://api.twilio.com/2010-04-01/Accounts/' . rawurlencode($sid) . '/Messages.json';
+    $args = [
+        'body' => [
+            'From' => $from,
+            'To' => $to,
+            'Body' => $message,
+        ],
+        'headers' => [
+            'Authorization' => 'Basic ' . base64_encode($sid . ':' . $token),
+        ],
+        'timeout' => 15,
+    ];
+    $response = wp_remote_post($url, $args);
+    // Optionally log or handle errors here
+}
+
 function refundguard_render_alerts_page_pro() {
     echo '<div class="wrap"><h1>' . __( 'Alerts', 'refundguard-for-woocommerce' ) . '</h1>';
     echo '<p>' . __( 'High-risk order alerts are sent to the admin email and via WhatsApp (if configured) when a high-risk order is detected.', 'refundguard-for-woocommerce' ) . '</p>';
     echo '<ul>';
     echo '<li>' . __( 'Email alerts: Sent to the site admin email.', 'refundguard-for-woocommerce' ) . '</li>';
-    echo '<li>' . __( 'WhatsApp alerts: Integrate with your WhatsApp provider using the refundguard_send_whatsapp action.', 'refundguard-for-woocommerce' ) . '</li>';
+    echo '<li>' . __( 'WhatsApp alerts: Sent via Twilio if configured in settings.', 'refundguard-for-woocommerce' ) . '</li>';
     echo '</ul>';
-    echo '<p><em>' . __( 'To customize WhatsApp integration, hook into refundguard_send_whatsapp.', 'refundguard-for-woocommerce' ) . '</em></p>';
+    echo '<p><em>' . __( 'To use WhatsApp alerts, enter your Twilio credentials in the settings page.', 'refundguard-for-woocommerce' ) . '</em></p>';
     // Show recent high-risk orders
     $orders = wc_get_orders([
         'limit' => 20,
