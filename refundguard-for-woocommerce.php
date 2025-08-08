@@ -37,21 +37,48 @@ require_once REFUNDGUARD_PLUGIN_DIR . 'includes/risk-score.php';
 require_once REFUNDGUARD_PLUGIN_DIR . 'includes/order-hooks.php';
 require_once REFUNDGUARD_PLUGIN_DIR . 'admin/dashboard.php';
 require_once REFUNDGUARD_PLUGIN_DIR . 'admin/settings-page.php';
+require_once REFUNDGUARD_PLUGIN_DIR . 'admin/license-page.php';
 
 // Load Pro features if present
 if ( file_exists( REFUNDGUARD_PRO_PATH ) ) {
     require_once REFUNDGUARD_PRO_PATH;
 }
 
-// Admin Menu Registration
+// Admin Menu Registration (top-level RefundGuard menu)
 add_action( 'admin_menu', 'refundguard_admin_menu' );
 function refundguard_admin_menu() {
-    add_submenu_page(
-        'woocommerce',
+    add_menu_page(
         __( 'RefundGuard', 'refundguard-for-woocommerce' ),
         __( 'RefundGuard', 'refundguard-for-woocommerce' ),
         'manage_woocommerce',
-        'refundguard-settings',
+        'refundguard',
+        'refundguard_render_settings_page',
+        'dashicons-shield-alt',
+        56
+    );
+    add_submenu_page(
+        'refundguard',
+        __( 'Settings', 'refundguard-for-woocommerce' ),
+        __( 'Settings', 'refundguard-for-woocommerce' ),
+        'manage_woocommerce',
+        'refundguard',
         'refundguard_render_settings_page'
     );
+    add_submenu_page(
+        'refundguard',
+        __( 'Analytics', 'refundguard-for-woocommerce' ),
+        __( 'Analytics', 'refundguard-for-woocommerce' ),
+        'manage_woocommerce',
+        'refundguard-analytics',
+        'refundguard_render_analytics_page'
+    );
+    add_submenu_page(
+        'refundguard',
+        __( 'License', 'refundguard-for-woocommerce' ),
+        __( 'License', 'refundguard-for-woocommerce' ),
+        'manage_woocommerce',
+        'refundguard-license',
+        'refundguard_render_license_page'
+    );
+    // Add more Pro submenus as needed
 }
