@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-// Add Refund Risk column after Status, before Total
+// Force Refund Risk column after Status and before Total
 add_filter( 'manage_edit-shop_order_columns', function( $columns ) {
     $new_columns = [];
     foreach ( $columns as $key => $label ) {
@@ -9,9 +9,17 @@ add_filter( 'manage_edit-shop_order_columns', function( $columns ) {
         if ( $key === 'order_status' ) {
             $new_columns['refundguard_risk'] = __( 'Refund Risk', 'refundguard-for-woocommerce' );
         }
+        if ( $key === 'order_total' && !isset($columns['refundguard_risk']) ) {
+            // fallback: if order_status not found, insert before total
+            $new_columns['refundguard_risk'] = __( 'Refund Risk', 'refundguard-for-woocommerce' );
+        }
+    }
+    // If not inserted, add at end
+    if ( !isset($new_columns['refundguard_risk']) ) {
+        $new_columns['refundguard_risk'] = __( 'Refund Risk', 'refundguard-for-woocommerce' );
     }
     return $new_columns;
-} );
+}, 20 );
 
 add_action( 'manage_shop_order_posts_custom_column', function( $column, $post_id ) {
     if ( $column === 'refundguard_risk' ) {
