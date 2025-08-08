@@ -64,14 +64,28 @@ function refundguard_admin_menu() {
         'refundguard',
         'refundguard_render_settings_page'
     );
-    add_submenu_page(
-        'refundguard',
-        __( 'Analytics', 'refundguard-for-woocommerce' ),
-        __( 'Analytics', 'refundguard-for-woocommerce' ),
-        'manage_woocommerce',
-        'refundguard-analytics',
-        'refundguard_render_analytics_page'
-    );
+    $license = get_option('refundguard_pro_license', '');
+    if ( file_exists( REFUNDGUARD_PRO_PATH ) && !empty($license) ) {
+        add_submenu_page(
+            'refundguard',
+            __( 'Analytics', 'refundguard-for-woocommerce' ),
+            __( 'Analytics', 'refundguard-for-woocommerce' ),
+            'manage_woocommerce',
+            'refundguard-analytics',
+            'refundguard_render_analytics_page'
+        );
+        // Add more Pro submenus here as needed
+    } else {
+        add_submenu_page(
+            'refundguard',
+            __( 'Analytics', 'refundguard-for-woocommerce' ),
+            __( 'Analytics', 'refundguard-for-woocommerce' ),
+            'manage_woocommerce',
+            'refundguard-analytics',
+            'refundguard_render_pro_upsell_page'
+        );
+        // Add more Pro submenus as upsell if needed
+    }
     add_submenu_page(
         'refundguard',
         __( 'License', 'refundguard-for-woocommerce' ),
@@ -80,5 +94,8 @@ function refundguard_admin_menu() {
         'refundguard-license',
         'refundguard_render_license_page'
     );
-    // Add more Pro submenus as needed
+}
+
+function refundguard_render_pro_upsell_page() {
+    echo '<div class="wrap"><h1>RefundGuard Pro</h1><p>' . __( 'This feature is available in RefundGuard Pro. Please enter your license key in the License tab to unlock Pro features.', 'refundguard-for-woocommerce' ) . '</p></div>';
 }
