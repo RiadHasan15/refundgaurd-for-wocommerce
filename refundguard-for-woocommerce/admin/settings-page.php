@@ -15,6 +15,7 @@ function refundguard_render_settings_page() {
         $settings['rule_country'] = ! empty( $_POST['rule_country'] ) ? 1 : 0;
         $settings['rule_previous_orders'] = ! empty( $_POST['rule_previous_orders'] ) ? 1 : 0;
         update_option( 'refundguard_settings', $settings );
+        do_action( 'refundguard_settings_save' );
         echo '<div class="updated"><p>' . __( 'Settings saved.', 'refundguard-for-woocommerce' ) . '</p></div>';
     }
     ?>
@@ -39,6 +40,7 @@ function refundguard_render_settings_page() {
                     <th><?php _e( 'Enable Previous Orders Rule', 'refundguard-for-woocommerce' ); ?></th>
                     <td><input type="checkbox" name="rule_previous_orders" value="1" <?php checked( $settings['rule_previous_orders'], 1 ); ?> /></td>
                 </tr>
+                <?php do_action( 'refundguard_settings_fields' ); ?>
             </table>
             <p><input type="submit" name="refundguard_save_settings" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'refundguard-for-woocommerce' ); ?>" /></p>
         </form>
