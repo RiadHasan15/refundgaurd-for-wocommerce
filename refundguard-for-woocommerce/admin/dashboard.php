@@ -21,6 +21,7 @@ function refundguard_render_dashboard_widget() {
     $high_risk_count = 0;
     foreach ( $orders_today as $order_id ) {
         $risk = refundguard_get_risk_score( $order_id );
+
         if ( $risk['score'] === 'high' ) {
             $high_risk_count++;
         }
@@ -38,6 +39,7 @@ function refundguard_render_dashboard_widget() {
     $count = 0;
     foreach ( $orders_7 as $order_id ) {
         $risk = refundguard_get_risk_score( $order_id );
+
         if ( $risk['score'] === 'high' ) $total_score += 3;
         elseif ( $risk['score'] === 'medium' ) $total_score += 2;
         else $total_score += 1;
