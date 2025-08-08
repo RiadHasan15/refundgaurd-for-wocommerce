@@ -36,10 +36,10 @@ function refundguard_deactivate() {
 if ( file_exists( REFUNDGUARD_PRO_PATH ) ) {
     require_once REFUNDGUARD_PRO_PATH;
 } else {
-    require_once REFUNDGUARD_PLUGIN_DIR . 'includes/risk-score.php';
-    require_once REFUNDGUARD_PLUGIN_DIR . 'includes/order-hooks.php';
-    require_once REFUNDGUARD_PLUGIN_DIR . 'admin/dashboard.php';
-    require_once REFUNDGUARD_PLUGIN_DIR . 'admin/settings-page.php';
+    require_once REFUNDGUARD_PLUGIN_DIR . 'risk-score.php';
+    require_once REFUNDGUARD_PLUGIN_DIR . 'order-hooks.php';
+    require_once REFUNDGUARD_PLUGIN_DIR . 'dashboard.php';
+    require_once REFUNDGUARD_PLUGIN_DIR . 'settings-page.php';
 }
 
 // Admin Menu Registration
