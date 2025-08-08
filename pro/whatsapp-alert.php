@@ -26,5 +26,36 @@ function refundguard_render_alerts_page_pro() {
     echo '<li>' . __( 'WhatsApp alerts: Integrate with your WhatsApp provider using the refundguard_send_whatsapp action.', 'refundguard-for-woocommerce' ) . '</li>';
     echo '</ul>';
     echo '<p><em>' . __( 'To customize WhatsApp integration, hook into refundguard_send_whatsapp.', 'refundguard-for-woocommerce' ) . '</em></p>';
+    // Show recent high-risk orders
+    $orders = wc_get_orders([
+        'limit' => 20,
+        'status' => array_keys( wc_get_order_statuses() ),
+        'return' => 'objects',
+    ]);
+    echo '<h2>' . __( 'Recent High-Risk Orders', 'refundguard-for-woocommerce' ) . '</h2>';
+    echo '<table class="widefat fixed striped"><thead><tr>';
+    echo '<th>' . __( 'Order ID', 'refundguard-for-woocommerce' ) . '</th>';
+    echo '<th>' . __( 'Customer', 'refundguard-for-woocommerce' ) . '</th>';
+    echo '<th>' . __( 'Email', 'refundguard-for-woocommerce' ) . '</th>';
+    echo '<th>' . __( 'Total', 'refundguard-for-woocommerce' ) . '</th>';
+    echo '<th>' . __( 'Risk', 'refundguard-for-woocommerce' ) . '</th>';
+    echo '<th>' . __( 'Reason', 'refundguard-for-woocommerce' ) . '</th>';
+    echo '<th>' . __( 'Alert Status', 'refundguard-for-woocommerce' ) . '</th>';
+    echo '</tr></thead><tbody>';
+    foreach ( $orders as $order ) {
+        $risk = refundguard_get_ai_risk_score( $order->get_id() );
+        if ( $risk['score'] === 'high' ) {
+            echo '<tr>';
+            echo '<td><a href="' . esc_url( get_edit_post_link( $order->get_id() ) ) . '">' . esc_html( $order->get_id() ) . '</a></td>';
+            echo '<td>' . esc_html( $order->get_formatted_billing_full_name() ) . '</td>';
+            echo '<td>' . esc_html( $order->get_billing_email() ) . '</td>';
+            echo '<td>' . wc_price( $order->get_total() ) . '</td>';
+            echo '<td><span style="color:#fff;padding:2px 8px;border-radius:12px;background:#e74c3c;font-weight:bold;">High</span></td>';
+            echo '<td>' . esc_html( $risk['reason'] ) . '</td>';
+            echo '<td>' . __( 'Alert Sent', 'refundguard-for-woocommerce' ) . '</td>';
+            echo '</tr>';
+        }
+    }
+    echo '</tbody></table>';
     echo '</div>';
 }
