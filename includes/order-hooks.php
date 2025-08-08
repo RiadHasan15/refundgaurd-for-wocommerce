@@ -3,6 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 // Force Refund Risk column after Status and before Total
 add_filter( 'manage_edit-shop_order_columns', function( $columns ) {
+    error_log('RefundGuard: shop_order_columns filter running');
     $new_columns = [];
     foreach ( $columns as $key => $label ) {
         $new_columns[$key] = $label;
@@ -18,6 +19,8 @@ add_filter( 'manage_edit-shop_order_columns', function( $columns ) {
     if ( !isset($new_columns['refundguard_risk']) ) {
         $new_columns['refundguard_risk'] = __( 'Refund Risk', 'refundguard-for-woocommerce' );
     }
+    // Add a debug/test column
+    $new_columns['refundguard_debug'] = 'Refund Risk (Debug)';
     return $new_columns;
 }, 20 );
 
@@ -28,6 +31,9 @@ add_action( 'manage_shop_order_posts_custom_column', function( $column, $post_id
         $class = $risk['score'] === 'high' ? 'status-cancelled tips' : ($risk['score'] === 'medium' ? 'status-on-hold tips' : 'status-completed tips');
         $label = ucfirst( $risk['score'] );
         echo '<mark class="' . esc_attr($class) . '" style="padding:2px 8px;font-size:12px;">' . esc_html( $label ) . '</mark>';
+    }
+    if ( $column === 'refundguard_debug' ) {
+        echo '<span style="color:#e74c3c;font-weight:bold;">DEBUG COLUMN</span>';
     }
 }, 10, 2 );
 
