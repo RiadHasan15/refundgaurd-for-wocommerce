@@ -1,41 +1,29 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-// Force Refund Risk column after Status and before Total
-add_filter( 'manage_edit-shop_order_columns', function( $columns ) {
-    error_log('RefundGuard: shop_order_columns filter running');
-    $new_columns = [];
-    foreach ( $columns as $key => $label ) {
-        $new_columns[$key] = $label;
-        if ( $key === 'order_status' ) {
-            $new_columns['refundguard_risk'] = __( 'Refund Risk', 'refundguard-for-woocommerce' );
-        }
-        if ( $key === 'order_total' && !isset($columns['refundguard_risk']) ) {
-            // fallback: if order_status not found, insert before total
-            $new_columns['refundguard_risk'] = __( 'Refund Risk', 'refundguard-for-woocommerce' );
-        }
-    }
-    // If not inserted, add at end
-    if ( !isset($new_columns['refundguard_risk']) ) {
-        $new_columns['refundguard_risk'] = __( 'Refund Risk', 'refundguard-for-woocommerce' );
-    }
-    // Add a debug/test column
-    $new_columns['refundguard_debug'] = 'Refund Risk (Debug)';
-    return $new_columns;
-}, 20 );
+// Inject Refund Risk badge into the Status column in the Orders list
+add_filter( 'woocommerce_admin_order_preview_line_items', function( $line_items, $order ) {
+    // This filter is for the preview popup, not the table. We'll use a different hook for the table.
+    return $line_items;
+}, 10, 2 );
 
-add_action( 'manage_shop_order_posts_custom_column', function( $column, $post_id ) {
-    if ( $column === 'refundguard_risk' ) {
+add_filter( 'manage_shop_order_posts_custom_column', function( $value, $column, $post_id ) {
+    if ( $column === 'order_status' ) {
         $risk = refundguard_get_risk_score( $post_id );
         $risk = apply_filters( 'refundguard_risk_score', $risk, $post_id );
         $class = $risk['score'] === 'high' ? 'status-cancelled tips' : ($risk['score'] === 'medium' ? 'status-on-hold tips' : 'status-completed tips');
         $label = ucfirst( $risk['score'] );
-        echo '<mark class="' . esc_attr($class) . '" style="padding:2px 8px;font-size:12px;">' . esc_html( $label ) . '</mark>';
+        $badge = '<br><mark class="' . esc_attr($class) . '" style="padding:2px 8px;font-size:12px;">' . esc_html( $label ) . '</mark>';
+        return $value . $badge;
     }
-    if ( $column === 'refundguard_debug' ) {
-        echo '<span style="color:#e74c3c;font-weight:bold;">DEBUG COLUMN</span>';
-    }
-}, 10, 2 );
+    return $value;
+}, 10, 3 );
+
+// Remove Refund Risk custom column and debug column if present
+add_filter( 'manage_edit-shop_order_columns', function( $columns ) {
+    unset($columns['refundguard_risk'], $columns['refundguard_debug']);
+    return $columns;
+}, 100 );
 
 // Add RefundGuard Risk as a WooCommerce admin notice in single order view
 add_action( 'woocommerce_admin_order_data_after_order_details', function( $order ) {
