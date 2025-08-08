@@ -32,14 +32,15 @@ function refundguard_deactivate() {
     // Deactivation logic here
 }
 
-// Load Free or Pro
+// Always load Free core/admin files
+require_once REFUNDGUARD_PLUGIN_DIR . 'includes/risk-score.php';
+require_once REFUNDGUARD_PLUGIN_DIR . 'includes/order-hooks.php';
+require_once REFUNDGUARD_PLUGIN_DIR . 'admin/dashboard.php';
+require_once REFUNDGUARD_PLUGIN_DIR . 'admin/settings-page.php';
+
+// Load Pro features if present
 if ( file_exists( REFUNDGUARD_PRO_PATH ) ) {
     require_once REFUNDGUARD_PRO_PATH;
-} else {
-    require_once REFUNDGUARD_PLUGIN_DIR . 'includes/risk-score.php';
-    require_once REFUNDGUARD_PLUGIN_DIR . 'includes/order-hooks.php';
-    require_once REFUNDGUARD_PLUGIN_DIR . 'admin/dashboard.php';
-    require_once REFUNDGUARD_PLUGIN_DIR . 'admin/settings-page.php';
 }
 
 // Admin Menu Registration
