@@ -14,12 +14,12 @@ add_action('admin_init', function() {
         return;
     }
     // Pro features loader (require other pro files here)
-    // require_once __DIR__ . '/ai-scoring.php';
-    // require_once __DIR__ . '/analytics.php';
-    // require_once __DIR__ . '/export.php';
-    // require_once __DIR__ . '/whatsapp-alert.php';
-    // require_once __DIR__ . '/po-generator.php';
-    // require_once __DIR__ . '/restock-importer.php';
+    require_once __DIR__ . '/ai-scoring.php';
+    require_once __DIR__ . '/analytics.php';
+    require_once __DIR__ . '/export.php';
+    require_once __DIR__ . '/whatsapp-alert.php';
+    require_once __DIR__ . '/po-generator.php';
+    require_once __DIR__ . '/restock-importer.php';
 });
 
 // TODO: Implement AI-powered risk scoring, auto-flag orders, advanced analytics, export, alerts, PO generation, CSV importer.
