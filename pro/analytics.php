@@ -1,16 +1,6 @@
 <?php
+error_log('RefundGuard: analytics.php loaded');
 if ( ! defined( 'ABSPATH' ) ) exit;
-
-add_action( 'admin_menu', function() {
-    add_submenu_page(
-        'woocommerce',
-        __( 'RefundGuard Analytics', 'refundguard-for-woocommerce' ),
-        __( 'RefundGuard Analytics', 'refundguard-for-woocommerce' ),
-        'manage_woocommerce',
-        'refundguard-analytics',
-        'refundguard_render_analytics_page'
-    );
-} );
 
 function refundguard_render_analytics_page() {
     $license = get_option('refundguard_pro_license', '');
