@@ -42,7 +42,7 @@ require_once REFUNDGUARD_PLUGIN_DIR . 'admin/license-page.php';
 // Load Pro features if present
 if ( file_exists( REFUNDGUARD_PRO_PATH ) ) {
     require_once REFUNDGUARD_PRO_PATH;
-    // Directly require analytics.php to guarantee callback is available
+    require_once REFUNDGUARD_PLUGIN_DIR . 'pro/ai-scoring.php';
     require_once REFUNDGUARD_PLUGIN_DIR . 'pro/analytics.php';
     require_once REFUNDGUARD_PLUGIN_DIR . 'pro/whatsapp-alert.php';
     require_once REFUNDGUARD_PLUGIN_DIR . 'pro/export.php';
