@@ -3,6 +3,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 // AI Risk Scoring (stub)
 function refundguard_get_ai_risk_score( $order_id ) {
+    $ai_enabled = get_option('refundguard_pro_ai_enabled', '1');
+    if ($ai_enabled !== '1') {
+        if ( function_exists( 'refundguard_get_risk_score' ) ) {
+            return refundguard_get_risk_score( $order_id );
+        }
+        return [ 'score' => 'low', 'reason' => __( 'AI scoring disabled, using rule-based', 'refundguard-for-woocommerce' ) ];
+    }
     $api_key = get_option( 'refundguard_openai_api_key', '' );
     if ( empty( $api_key ) ) {
         // Fallback to rule-based
@@ -49,11 +56,19 @@ function refundguard_openai_request( $api_key, $prompt ) {
 
 // Auto-flag high-risk orders after payment
 add_action( 'woocommerce_thankyou', function( $order_id ) {
+    $auto_flag = get_option('refundguard_pro_auto_flag', '1');
+    $email_alerts = get_option('refundguard_pro_email_alerts', '1');
     $risk = refundguard_get_ai_risk_score( $order_id );
     if ( $risk['score'] === 'high' ) {
         $order = wc_get_order( $order_id );
-        if ( $order && $order->get_status() !== 'on-hold' ) {
+        if ( $auto_flag === '1' && $order && $order->get_status() !== 'on-hold' ) {
             $order->update_status( 'on-hold', __( 'Auto-flagged by RefundGuard: High refund risk', 'refundguard-for-woocommerce' ) );
+        }
+        if ( $email_alerts === '1' ) {
+            $admin_email = get_option( 'admin_email' );
+            $subject = __( 'High-Risk Order Alert', 'refundguard-for-woocommerce' );
+            $message = sprintf( __( 'Order #%d has been flagged as HIGH RISK.\nReason: %s', 'refundguard-for-woocommerce' ), $order_id, $risk['reason'] );
+            wp_mail( $admin_email, $subject, $message );
         }
     }
 } );
