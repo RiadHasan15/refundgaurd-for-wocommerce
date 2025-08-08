@@ -76,6 +76,22 @@ function refundguard_admin_menu() {
     );
     add_submenu_page(
         'refundguard',
+        __( 'Export', 'refundguard-for-woocommerce' ),
+        __( 'Export', 'refundguard-for-woocommerce' ),
+        'manage_woocommerce',
+        'refundguard-export',
+        'refundguard_render_export_page'
+    );
+    add_submenu_page(
+        'refundguard',
+        __( 'Alerts', 'refundguard-for-woocommerce' ),
+        __( 'Alerts', 'refundguard-for-woocommerce' ),
+        'manage_woocommerce',
+        'refundguard-alerts',
+        'refundguard_render_alerts_page'
+    );
+    add_submenu_page(
+        'refundguard',
         __( 'License', 'refundguard-for-woocommerce' ),
         __( 'License', 'refundguard-for-woocommerce' ),
         'manage_woocommerce',
@@ -86,4 +102,30 @@ function refundguard_admin_menu() {
 
 function refundguard_render_pro_upsell_page() {
     echo '<div class="wrap"><h1>RefundGuard Pro</h1><p>' . __( 'This feature is available in RefundGuard Pro. Please enter your license key in the License tab to unlock Pro features.', 'refundguard-for-woocommerce' ) . '</p></div>';
+}
+
+function refundguard_render_export_page() {
+    $license = get_option('refundguard_pro_license', '');
+    if (empty($license)) {
+        echo '<div class="wrap"><h1>RefundGuard Pro</h1><p>' . __( 'This feature is available in RefundGuard Pro. Please enter your license key in the License tab to unlock Pro features.', 'refundguard-for-woocommerce' ) . '</p></div>';
+        return;
+    }
+    if (function_exists('refundguard_render_export_page_pro')) {
+        refundguard_render_export_page_pro();
+    } else {
+        echo '<div class="wrap"><h1>Export</h1><p>' . __( 'Export feature not available.', 'refundguard-for-woocommerce' ) . '</p></div>';
+    }
+}
+
+function refundguard_render_alerts_page() {
+    $license = get_option('refundguard_pro_license', '');
+    if (empty($license)) {
+        echo '<div class="wrap"><h1>RefundGuard Pro</h1><p>' . __( 'This feature is available in RefundGuard Pro. Please enter your license key in the License tab to unlock Pro features.', 'refundguard-for-woocommerce' ) . '</p></div>';
+        return;
+    }
+    if (function_exists('refundguard_render_alerts_page_pro')) {
+        refundguard_render_alerts_page_pro();
+    } else {
+        echo '<div class="wrap"><h1>Alerts</h1><p>' . __( 'Alerts feature not available.', 'refundguard-for-woocommerce' ) . '</p></div>';
+    }
 }

@@ -42,3 +42,18 @@ add_action( 'wp_ajax_refundguard_export_csv', function() {
     fclose( $out );
     exit;
 } );
+
+function refundguard_render_export_page_pro() {
+    echo '<div class="wrap"><h1>' . __( 'Export High-Risk Orders', 'refundguard-for-woocommerce' ) . '</h1>';
+    echo '<a href="#" class="button button-secondary" id="refundguard-export-csv">' . __( 'Export High-Risk Orders to CSV', 'refundguard-for-woocommerce' ) . '</a>';
+    echo '<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var btn = document.getElementById("refundguard-export-csv");
+        if(btn) btn.onclick = function(e) {
+            e.preventDefault();
+            window.location = "' . admin_url( 'admin-ajax.php?action=refundguard_export_csv' ) . '";
+        };
+    });
+    </script>';
+    echo '</div>';
+}
