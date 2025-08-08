@@ -11,6 +11,19 @@ function refundguard_render_license_page() {
     ?>
     <div class="wrap">
         <h1><?php _e( 'RefundGuard Pro License', 'refundguard-for-woocommerce' ); ?></h1>
+        <div style="background: #f8fafc; border: 1px solid #e0e6ed; border-radius: 10px; padding: 24px 32px; margin-bottom: 32px; max-width: 700px;">
+            <h2 style="margin-top:0; color:#1a202c; font-size:1.5em;"><span style="color:#3b82f6;">Upgrade to RefundGuard Pro</span></h2>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="margin-bottom: 12px;"><span style="font-size:1.2em; color:#10b981; font-weight:bold;">🤖 AI-Powered Risk Scoring</span><br><span style="color:#555;">Analyze orders with OpenAI or your own ML model for smarter, more accurate risk detection.</span></li>
+                <li style="margin-bottom: 12px;"><span style="font-size:1.2em; color:#f59e42; font-weight:bold;">🔔 Auto-Flag High-Risk Orders</span><br><span style="color:#555;">Automatically set risky orders to "On Hold" or "Manual Review" before fulfillment.</span></li>
+                <li style="margin-bottom: 12px;"><span style="font-size:1.2em; color:#3b82f6; font-weight:bold;">📊 Advanced Analytics Dashboard</span><br><span style="color:#555;">Visualize refund risk by product, category, and country with interactive charts.</span></li>
+                <li style="margin-bottom: 12px;"><span style="font-size:1.2em; color:#6366f1; font-weight:bold;">📤 Export High-Risk Orders</span><br><span style="color:#555;">Export flagged orders to CSV for reporting or further review.</span></li>
+                <li style="margin-bottom: 12px;"><span style="font-size:1.2em; color:#ef4444; font-weight:bold;">📲 Instant Alerts</span><br><span style="color:#555;">Get notified by email or WhatsApp when a high-risk order is detected.</span></li>
+            </ul>
+            <div style="margin-top:18px;">
+                <span style="background:#3b82f6;color:#fff;padding:8px 18px;border-radius:6px;font-weight:bold;font-size:1.1em;">All Pro features are unlocked with a valid license key!</span>
+            </div>
+        </div>
         <form method="post">
             <?php wp_nonce_field( 'refundguard_save_license' ); ?>
             <table class="form-table">
