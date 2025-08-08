@@ -7,6 +7,10 @@ function refundguard_render_license_page() {
         update_option( 'refundguard_pro_license', sanitize_text_field( $_POST['refundguard_pro_license'] ) );
         echo '<div class="updated"><p>' . __( 'License saved.', 'refundguard-for-woocommerce' ) . '</p></div>';
     }
+    if ( isset( $_POST['refundguard_deactivate_license'] ) && check_admin_referer( 'refundguard_save_license' ) ) {
+        delete_option( 'refundguard_pro_license' );
+        echo '<div class="updated"><p>' . __( 'License deactivated.', 'refundguard-for-woocommerce' ) . '</p></div>';
+    }
     $license = get_option( 'refundguard_pro_license', '' );
     ?>
     <div class="wrap">
@@ -32,7 +36,12 @@ function refundguard_render_license_page() {
                     <td><input type="text" name="refundguard_pro_license" value="<?php echo esc_attr( $license ); ?>" size="40" /></td>
                 </tr>
             </table>
-            <p><input type="submit" name="refundguard_save_license" class="button-primary" value="<?php esc_attr_e( 'Save License', 'refundguard-for-woocommerce' ); ?>" /></p>
+            <p>
+                <input type="submit" name="refundguard_save_license" class="button-primary" value="<?php esc_attr_e( 'Save License', 'refundguard-for-woocommerce' ); ?>" />
+                <?php if ( !empty($license) ) { ?>
+                    <input type="submit" name="refundguard_deactivate_license" class="button" value="<?php esc_attr_e( 'Deactivate License', 'refundguard-for-woocommerce' ); ?>" onclick="return confirm('Are you sure you want to deactivate your license?');" />
+                <?php } ?>
+            </p>
         </form>
         <p><?php _e( 'Enter your RefundGuard Pro license key. Pro features will be enabled if a valid license is entered. (For testing, any value will enable Pro features.)', 'refundguard-for-woocommerce' ); ?></p>
     </div>
